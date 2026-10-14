@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>01 范式之变 脑图</title>
+<style>
+  body { margin: 0; }
+  svg.markmap { width: 100%; height: 100vh; }
+  .title { position: fixed; top: 12px; left: 16px; font-size: 14px; color: #666; z-index: 10; background: rgba(255,255,255,.8); padding: 4px 10px; border-radius: 6px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18"></script>
+</head>
+<body>
+<div class="title">01 范式之变：GoF 的崩塌和分布式的血脉进化（点击节点可折叠/展开）</div>
+<div class="markmap">
+<script type="text/template">
+---
+markmap:
+  maxWidth: 320
+  initialExpandLevel: 2
+  colorFreezeLevel: 2
+---
+
+# 🧬 01 范式之变
+## 🧭 核心命题
+- 三句话回顾 30 年
+  - GoF：代码怎么组织
+  - 分布式：服务怎么存活
+  - Agent：模型怎么被约束地行动
+- 总根因：决策权搬家
+  - GoF：编译期决策 + 运行时执行
+  - Agent：运行时决策 + 运行时执行
+  - 决策权：开发者 → 大模型
+- 金句
+  - Agent 架构 = 不确定性下设计有界资源分配
+  - 模型负责花钱，Harness 负责管账
+## 🏛 第一代 GoF 23 模式
+- 1994 GoF 四人帮
+- 三类 23 模式
+  - 创建型：怎么造对象
+  - 结构型：怎么拼对象
+  - 行为型：怎么协作
+- 渊源：Alexander《A Pattern Language》(1977)
+- 两大价值
+  - 共同词汇（用了 20 年）
+  - 萃取工业实战经验
+- 底层假设
+  - 单进程
+  - 共享内存
+  - 同步调用
+  - 确定性失败
+## 🌐 第二代 分布式模式
+- 2010s：单机 → 集群
+- 四大假设受冲击
+  - 共享内存 → 网络分区
+  - 同步调用 → 异步消息
+  - 单点失败 → 部分失败
+  - 确定性 → CAP 三选二
+- 9 个经典分布式模式（见配图）
+- 共同特征：不确定性当首要关注点
+- 奠基书：《Release It!》
+- 累计：23 + 9 = 32 个旧模式
+## 🤖 第三代 Agent 模式
+- 解决"模型怎样被约束地行动"
+- 协作核心演进
+  - 第一代：对象协作
+  - 第二代：服务协作
+  - 第三代：模型协作
+- 最深变化：决策位置迁移
+  - 设计时（人）→ 运行时（模型）
+- 旧模式失重，但不彻底失效
+## 💥 模式崩塌：四大断裂
+- Singleton 断裂
+  - 状态不再全局共享
+  - token 上限 + 每轮重置
+  - 接替：4 层记忆架构
+- Factory 断裂
+  - 动作空间编译期开放
+  - MCP 运行时动态发现工具
+  - 接替：语义工具路由
+- Observer 断裂
+  - 同步推送会自爆
+  - DOM/logstream 挤爆窗口
+  - 接替：主动感知
+- Strategy 断裂
+  - 人不再选策略
+  - Claude Code 修 bug 走 7 步
+  - 接替：LLM 在 reason() 里每步自己挑
+- 根因
+  - 决策权从开发者搬到大模型
+  - GoF 23 模式集体失重
+## 🩸 血脉进化：推进不是断裂
+- 二代处理：服务世界的不确定性
+- 三代处理：模型决策的不确定性
+- 例：长事务补偿 → 规划—执行
+- 旧模式被"抬高一个层次"
+- 真正崩的：系统默认可控这个前提
+## 🎲 三种不确定性
+- ① 输出不确定
+  - 同一 prompt 跑十次、十种答案
+  - retry 幂等假设失效
+  - 熔断器/幂等键要重新装
+- ② 行为不确定
+  - 行为轨迹非写死流程图
+  - ReAct 循环长度内容不可预测
+- ③ 环境不确定
+  - 页面布局会变
+  - Codebase 被同事改过
+  - 世界不会等 Agent
+- 对策：把不确定性当默认运行条件
+  - 默认会漂、会偏、会重复、会失控
+  - 前提下设计结构，不等出问题打补丁
+## 🏗 真正的新地基：Harness
+- 工程师定义的范围扩展
+  - 什么上下文下思考
+  - 能看到什么信息
+  - 能调哪些工具
+  - 什么条件必须停
+  - 错了怎么拉回来
+  - 谁留痕、谁审计
+- 这一整层不是 prompt，是 Harness
+- 花钱与管账
+  - token/context/工具调用/wall-clock/信任/风险 = 钱
+  - Harness 不创造智能，约束智能的开销与后果
+- 最高杠杆工程
+  - 改 prompt = 让它"这次别犯"
+  - 改 Harness = 让它"以后都别犯"
+  - 调参 = 局部修补
+  - Harness = 把错误上升为系统纪律
+- 新工程师能力：把流程/知识/权限/风险/审计沉淀成 Harness 结构
+## 🗺 双轴正交框架
+- 轴一：认知功能（资源花在哪）
+  - 感知 记忆 推理 行动
+  - 反思 协作 治理
+- 轴二：执行拓扑（资源怎么花出去）
+  - 链式 路由 并行
+  - 编排 循环 层级
+- 28 个新模式 = Agent 时代的 GoF 词汇
+## 💬 留言区精华
+- 状态同步四层
+  - 懒拉取（冷数据）
+  - 定时刷新（温数据）
+  - 事件驱动失效（热数据）
+  - 混合分层（生产标配）
+- OODA 环同构（John Boyd）
+  - 观察者→单例→策略→工厂
+  - Observe→Orient→Decide→Act
+  - OODA 正是 Harness 核心
+- ELK 日志治理五级
+  - L1 写 AGENTS.md
+  - L2 P0 区每轮重注入
+  - L3 返回硬上限
+  - L4 pre-tool-use hook 拦截
+  - L5 主 agent 不暴露工具
+  - 规则变成架构，就不靠模型自觉
+- 三代是叠加不是替代
+  - Agent 越复杂，传统工程越重要
+  - 复杂度叠加，而非替代
+- 第二代书单
+  - Release It! / Building Microservices
+  - Microservices Patterns / DDIA
+  - Cloud Native Patterns / SRE book
+## ✅ 总结与预告
+- 记住一条完整血脉
+  - 对象协作 → 服务协作 → 模型协作
+- 第三代成立的关键：决策位置迁移
+- 28 个模式回答同一个问题
+  - 模型运行时自己做决定
+  - 怎么让决定稳定/可审计/可复用/可进化
+- 下一讲
+  - 双轴框架具体内涵
+  - 28 个模式典型例子
+  - 逆向五步法
+</script>
+</div>
+</body>
+</html>
