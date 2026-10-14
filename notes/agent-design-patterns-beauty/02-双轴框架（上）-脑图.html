@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>02 双轴框架（上） 脑图</title>
+<style>
+  body { margin: 0; }
+  svg.markmap { width: 100%; height: 100vh; }
+  .title { position: fixed; top: 12px; left: 16px; font-size: 14px; color: #666; z-index: 10; background: rgba(255,255,255,.8); padding: 4px 10px; border-radius: 6px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18"></script>
+</head>
+<body>
+<div class="title">02 双轴框架（上）：理解认知功能与执行拓扑（点击节点可折叠/展开）</div>
+<div class="markmap">
+<script type="text/template">
+---
+markmap:
+  maxWidth: 320
+  initialExpandLevel: 2
+  colorFreezeLevel: 2
+---
+
+# 🧭 02 双轴框架（上）
+## 💡 核心命题
+- Agent 设计模式在回答什么
+  - 不是"最终代码长什么样"
+  - 不确定的模型 + 有限资源
+  - 注意力/记忆/推理/工具/权限/责任放哪
+- 双轴定义
+  - 纵轴：认知功能（What）
+  - 横轴：执行拓扑（How）
+  - What × How → Why
+- 坐标的价值
+  - 没坐标："用了个 agent workflow"≈零信息
+  - 有坐标：推理×循环+治理×路由→可评审
+## 🔍 框架发现之路
+- 起点：Cisco 培训学员提问
+- 分布式时代：问题→模式
+  - 网络会挂→熔断
+  - 跨服务事务失败→补偿（Saga）
+  - 横切关注点散落→Sidecar
+  - 有效原因：问题高度可命名
+- Agent 时代为什么不够
+  - 模式组合密度更高
+  - 代码评审 Agent 同时用 7 模式
+  - 它们是互相影响的预算系统
+  - 词汇越热，歧义越大
+- 结论
+  - 术语表不足以解决问题
+  - 需要能把术语定位的坐标系
+## 🕶 业界分类的三个盲区
+- 四套说法 = 立体物的三视图
+  - Weng 在数模块
+  - Anthropic 在数 Workflow
+  - Andrew Ng 在数常见 Pattern
+  - Chip Huyen 在数工程角色
+- 盲区一：感知
+  - 生产系统最先死的是 input
+  - 200K 装不下 codebase
+  - 100 个 chunk 70 个噪声
+  - 感知 = 注意力预算第一道闸
+- 盲区二：反思
+  - Reflexion 论文：性能明显提升
+  - Reasoning = 生成方向
+  - Reflection = 纠偏方向
+  - 必须独立成脉
+- 盲区三：治理
+  - Demo 可无治理，工程不能
+  - 2025 Anthropic agentic cyber misuse
+  - 审批门控/爆炸半径/审计追踪
+- 三个盲区同一根因
+  - 太关注模型"里面"
+  - 太少讨论模型"周围"
+  - Model spends, harness budgets
+## 📊 纵轴：感知七脉
+- 四件事不够
+  - 感知记忆推理行动 = 内圈
+  - 生产系统 + 反思协作治理
+  - 七脉神剑
+- 三个圈层
+  - 内圈·核心认知 → 能用
+  - 中圈·元认知（反思）→ 可靠
+  - 外圈·系统智能 → 能上线
+- 建设顺序（大量团队死因）
+  - 先跑通内圈
+  - 再加反思稳定质量
+  - 最后协作治理扩大规模
+  - 顺序反了：错误涌现非智能涌现
+  - 可暂缺一脉，不能假装不存在
+- 七脉 = 七种资源预算
+  - 感知 = 注意力预算（上下文分诊）
+  - 记忆 = 连续性预算（分层记忆）
+  - 推理 = 不确定性预算（复杂度路由）
+  - 行动 = 不可逆预算（工具调度）
+  - 反思 = 校正预算（生成评审）
+  - 协作 = 分工预算（专业化+隔离）
+  - 治理 = 信任预算（审批门控）
+- 缺脉失控对照
+  - 缺感知 → token 失控
+  - 缺记忆 → 连续性失控
+  - 缺推理 → 判断失控
+  - 缺行动约束 → 世界状态失控
+  - 缺反思 → 错误失控
+  - 缺协作 → 规模失控
+  - 缺治理 → 信任失控
+## 🌐 横轴：拓扑六式
+- 各框架都在回答"流怎么走"
+  - Anthropic 五种 workflow
+  - Google ADK：Sequential/Parallel/Loop
+  - OpenAI：Handoffs/Guardrails/Tracing
+  - LangGraph：有向图+条件边
+- 六式口诀：传 选 撒 协 转 分
+  - Chain 传：可预测，错误顺流而下
+  - Route 选：核心是分类器质量
+  - Parallel 撒：关键在 merge 非 fan-out
+  - Orchestrate 协：中心拆解+汇总
+  - Loop 转：核心是停止条件
+  - Hierarchy 分：多层责任分解
+- Orchestrate ≠ Hierarchy
+  - 编排：一层中心编排多 worker
+  - 层级：多层责任分解
+- 大开脑洞：错误传播轴
+  - Chain → 错误级联
+  - Route → 错误分派
+  - Parallel → 错误聚合
+  - Orchestrate → 错误分解
+  - Loop → 错误复合
+  - Hierarchy → 放大或隔离
+  - 选拓扑 = 选错误怎么移动
+## 🎯 总结
+- 纵七脉定资源得失
+- 横六式断错误路径
+- 双轴既立，评析入微
+- 《Designing AI Agents》
+  - 单看功能或流程都不足
+  - 正交才能区分表面相似
+- 目录 vs 坐标系
+  - 目录：告诉你有哪些模式
+  - 坐标系：为什么在这/不在那
+  - 新模式如何进入工程语言
+## 💬 留言区精华
+- Route vs Orchestrate（置顶）
+  - 路由：固定菜单挑一个，决策后退场
+  - 编排：菜单临时生成，中心全程在场
+- 90% 定律（置顶）
+  - 失败 90% 非模型不会推理
+  - 是错误在系统里扩散了
+- HATEOAS 报销 Agent（25 赞）
+  - 状态驱动的 Route + Loop
+  - 切中 stateful vs stateless 差别
+- Agent 推理 = LLM 推理 + Harness 推理
+## ✅ 预告
+- 下一讲：为什么两轴必须"正交"
+- 从分类图 → 选型/评审/演进的工程工具
+</script>
+</div>
+</body>
+</html>
