@@ -1,19 +1,20 @@
 ---
 name: "session-artifacts"
-description: "Generates a notes bundle from web articles or session content: full notes MD (with images), quick-reference MD, and interactive markmap HTML, saved under notes/<topic>/ with cross-links. Invoke when user asks to save/organize notes from an article URL, generate a mindmap, or produce review-friendly artifacts from a session."
+description: "Generates a notes bundle from web articles or session content: full notes MD (with images), quick-reference MD, and interactive markmap HTML, saved under notes/<topic>/ with cross-links. Also generates a Q&A-and-discussion MD (reflection questions + answers distilled from top comments and author replies) when the source has reflection questions. Invoke when user asks to save/organize notes from an article URL, generate a mindmap, or produce review-friendly artifacts from a session."
 ---
 
 # Session Artifacts（会话产物整理）
 
-把一次会话中产生的内容（通常是网页文章/课程）整理为三件可长期复习的产物，统一存放、互相链接。
+把一次会话中产生的内容（通常是网页文章/课程）整理为三件可长期复习的产物，统一存放、互相链接；课程/专栏类原文若带思考题且留言区有高质量讨论，追加第四件「思考题与讨论」文档（见第 6 步）。
 
-## 产物清单（三件套）
+## 产物清单（三件套 + 可选讨论文档）
 
 | 文件 | 用途 | 命名 |
 |---|---|---|
 | 完整笔记 MD | 深入学习，保留原文结构、图片、留言区精华 | `<主题>-完整版.md` |
 | 速览版 MD | 复习首选，5 分钟过完，只留重点表格和金句 | `<主题>-速览版.md` |
 | 交互脑图 HTML | 结构化记忆，markmap 渲染，可折叠展开 | `<主题>-脑图.html` |
+| 思考题与讨论 MD（可选） | 原文有思考题时：思考题 + 逐题参考答案（从留言区讨论提炼）+ 高分评论及作者回复 | `<主题>-思考题与讨论.md` |
 
 存放结构（工作目录为根）：
 
@@ -22,6 +23,7 @@ notes/<topic-slug>/
 ├── <主题>-完整版.md
 ├── <主题>-速览版.md
 ├── <主题>-脑图.html
+├── <主题>-思考题与讨论.md   (可选：原文带思考题时)
 └── images/
     └── 01-xxx.jpg ... (按原文出现顺序编号)
 ```
@@ -145,7 +147,55 @@ markmap:
 
 脑图内容组织：按"核心命题 → 问题 → 观点 → 框架 → 结构 → 目标 → 总结"的层次；节点短语化，单个节点不超过 ~20 字；用 emoji 区分分支类型。
 
-### 第 6 步：互链与本地预览
+### 第 6 步：生成思考题与讨论文档（原文有思考题时）
+
+课程/专栏类文章常带「思考题」+ 活跃留言区（作者逐条回复是最大价值来源）。**没有思考题就跳过此步**，只产出三件套。
+
+命名：`<主题>-思考题与讨论.md`，与三件套同目录。
+
+**先抓全评论（踩过的坑）**：
+
+- 评论是懒加载的，直接设 `scrollTop` 无效——必须派发滚动事件。每轮执行一次，配合 `browser_wait_for({time: 1})`，直到返回条数不再增长（通常 3 轮）：
+
+```js
+var els = document.querySelectorAll('[class*="contentWrapScroller"], .simplebar-content-wrapper, .simplebar-scroll-content');
+els.forEach(function(el){
+  el.scrollTop = el.scrollHeight;
+  el.dispatchEvent(new Event('scroll', {bubbles: true}));
+});
+return document.querySelectorAll('[class*="CommentItemPC_mainWrapper"]').length;
+```
+
+- 每条评论提取：用户名、点赞数、是否置顶、时间、正文、作者回复全文（极客时间类名参考：`CommentItemPC_mainWrapper / username / topTag / time / bd / reply / content / actions`）
+- evaluate 里写正则的 `\n` 会被 JSON 转义吃掉而报错——换行一律用 `String.fromCharCode(10)` + `split/join`
+- **点赞数与用户名易粘连误判**（如「40/111」实为用户「111」，40 是上一条的点赞数）：提取后必须肉眼抽查首尾各 2 条与页面对齐
+
+**文档结构模板**：
+
+```markdown
+# <主题> · 思考题与高分讨论
+
+> <来源 · 第 N 讲> · 原文思考题 N 道 + 逐题参考答案（从留言区讨论提炼）+ 全部 N 条留言（含作者逐条回复）· 按点赞数排序
+> 📚 三件套互链（完整版/速览版/脑图） · 📎 原文链接
+
+## 一、原文思考题（N 道）         ← 表格：# / 题目 / 考察点，保留作者的引导语
+## 二、思考题参考答案（从留言区讨论提炼）
+## 三、高分评论及作者回复（按点赞数排序） ← 引用块保留评论原话，作者回复一字不改；置顶的标注 📌
+## 四、更多精选问答              ← 与思考题无关但高价值的问答
+## 五、作者置顶留言（如有）        ← 「设计三定律」类总结性留言
+## 一句话收尾
+```
+
+**第二节「参考答案」的提炼纪律（最重要）**：
+
+- 逐题（Q1…Qn）综合相关评论与作者回复作答，每条观点标注**留言作者 + 点赞数**；作者确认/纠正处明确标注「作者确认」
+- 只做「提炼」不做「编造」：无读者作答的题如实写「留言区没有读者按题直接作答」，只列间接线索，不强行拼凑
+- 有作者明确确认的答案（如回复「这就是正确答案」）放该题最显眼位置，注明是唯一作者确认解
+- 综合推断与原文引用区分口吻，方便读者对照第三节原文复核
+
+生成后：三件套头部（完整版、速览版）加本文档入口，本文档头部加三件套入口（互链细节见第 7 步）。
+
+### 第 7 步：互链与本地预览
 
 **互链规则（踩过的坑，务必遵守）**：
 - 中文文件名在 HTTP URL 中**必须 URL 编码**（如 `%E8%84%91%E5%9B%BE.html`）
@@ -164,7 +214,7 @@ python -m http.server 8765 --bind 127.0.0.1   # 工作目录为根，run_in_back
 
 若 navigate 未生效（页面停留在旧 tab），加 `newTab: true` 重试。
 
-### 第 7 步：提交并推送到 GitHub
+### 第 8 步：提交并推送到 GitHub
 
 工作目录本身是 git 仓库，remote 为 SSH 地址（公钥已绑定，无需再登录）。
 
@@ -175,7 +225,7 @@ git add notes/<topic-slug>/; git commit -m "Add <主题> notes with mindmap and 
 要点：
 - PowerShell 5 不支持 `&&`，用 `;` 串联命令
 - 只 add 本次主题目录 `notes/<topic-slug>/`，避免混入无关文件
-- commit message 风格：`Add <主题> notes with mindmap and images`（中英混合即可）
+- commit message 风格：`Add <主题> notes with mindmap and images`（中英混合即可）；含思考题与讨论文档时用 `... with mindmap, images and discussion`
 - git 输出中文件名显示为 `\345\274\200...` 是中文转义，**不是错误**
 - LF/CRLF warning 无害，忽略即可
 - push 认证失败（`Permission denied (publickey)`）→ 提醒用户把 `~/.ssh/id_ed25519.pub` 添加到 GitHub Settings → SSH keys
@@ -186,6 +236,7 @@ git add notes/<topic-slug>/; git commit -m "Add <主题> notes with mindmap and 
 - [ ] notes/<topic-slug>/ 下三件套齐全
 - [ ] images/ 中图片下载成功且被完整版引用（相对路径 images/xx）
 - [ ] 完整版 ↔ 速览版 ↔ 脑图 三者头部互链可达
+- [ ] 原文有思考题时：「思考题与讨论」文档已生成（含逐题参考答案、观点归属标注），且与三件套互链；无思考题则跳过此项
 - [ ] 脑图 HTTP 地址返回 200 且渲染出节点
 - [ ] 已提交并推送：`git status` 显示 working tree clean，本地与 origin/main 同步
 - [ ] 向用户汇报目录树 + 各文件用途一句话
