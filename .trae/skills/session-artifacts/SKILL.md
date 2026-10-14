@@ -164,10 +164,28 @@ python -m http.server 8765 --bind 127.0.0.1   # 工作目录为根，run_in_back
 
 若 navigate 未生效（页面停留在旧 tab），加 `newTab: true` 重试。
 
+### 第 7 步：提交并推送到 GitHub
+
+工作目录本身是 git 仓库，remote 为 SSH 地址（公钥已绑定，无需再登录）。
+
+```powershell
+git add notes/<topic-slug>/; git commit -m "Add <主题> notes with mindmap and images"; git push
+```
+
+要点：
+- PowerShell 5 不支持 `&&`，用 `;` 串联命令
+- 只 add 本次主题目录 `notes/<topic-slug>/`，避免混入无关文件
+- commit message 风格：`Add <主题> notes with mindmap and images`（中英混合即可）
+- git 输出中文件名显示为 `\345\274\200...` 是中文转义，**不是错误**
+- LF/CRLF warning 无害，忽略即可
+- push 认证失败（`Permission denied (publickey)`）→ 提醒用户把 `~/.ssh/id_ed25519.pub` 添加到 GitHub Settings → SSH keys
+- 首次在新仓库操作时先 `git status` 确认分支为 `main` 且 remote 指向 `git@github.com:zlzdmv2022/growth.git`
+
 ## 完成检查
 
 - [ ] notes/<topic-slug>/ 下三件套齐全
 - [ ] images/ 中图片下载成功且被完整版引用（相对路径 images/xx）
 - [ ] 完整版 ↔ 速览版 ↔ 脑图 三者头部互链可达
 - [ ] 脑图 HTTP 地址返回 200 且渲染出节点
+- [ ] 已提交并推送：`git status` 显示 working tree clean，本地与 origin/main 同步
 - [ ] 向用户汇报目录树 + 各文件用途一句话
