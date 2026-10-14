@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>开篇词｜驾驭工程：Agent 时代必修课 脑图</title>
+<style>
+  body { margin: 0; }
+  svg.markmap { width: 100%; height: 100vh; }
+  .title { position: fixed; top: 12px; left: 16px; font-size: 14px; color: #666; z-index: 10; background: rgba(255,255,255,.8); padding: 4px 10px; border-radius: 6px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18"></script>
+</head>
+<body>
+<div class="title">《Agent 驾驭工程之美》开篇词 · 驾驭工程：Agent 时代必修课（点击节点可折叠/展开）</div>
+<div class="markmap">
+<script type="text/template">
+---
+markmap:
+  maxWidth: 320
+  initialExpandLevel: 3
+  colorFreezeLevel: 2
+---
+
+# 🚀 开篇词｜驾驭工程：Agent 时代必修课
+
+## 🌍 时代背景
+- 2026-06-01 黄仁勋台北宣布
+- 「操作系统 + App」→「操作系统 + Agent」
+- 不再装 App：自然语言说意图，Agent 调工具下单
+- 交互范式之变
+  - 过去：打开应用、点击输入
+  - 现在：说意图，Agent 生成代码/调用工具
+- 🧩 Agent 四组成
+  - LLM：大脑，负责思考
+  - **Harness：身体，连接一切**
+  - Tools 工具
+  - Runtime 运行时
+- 没有Harness：大模型只是会思考的头颅
+
+## 🐴 Harness 是什么
+- 本意：马具（缰绳/马鞍/马镫/笼头）
+- LLM = 的卢赤兔
+  - 再能跑，也不知你的意图/边界/标准
+  - 要靠你告诉它、检查它、调整它
+- 📝 周报例子
+  - 裸跑大模型
+    - 风格漂移（上周文字这周列表）
+    - 完全不知道上周做了什么
+    - 折腾半小时还是自己动手
+  - 构造 Harness（AGENTS.md）
+    - 读最近 8 周周报了解进展和风格
+    - 按规定结构生成 + 自动检查
+    - 连续几周连贯一致
+  - 工具：OpenClaw / Claude / Hermes
+- 🔧 四个基本手段
+  - 项目仓库 Repository：内容落文件系统
+  - 前馈 Feedforward：结构/风格要求
+  - 反馈 Feedback：结果检查（亮点/数据/责任人）
+  - 状态管理 State：文件留存上下文
+- 本质：一次性提示词 → 可重复的 AI 项目
+
+## 🔬 证据
+- Anthropic 2025 对照实验
+  - 同一模型/任务/提示词
+  - 「2D 复古游戏编辑器」
+  - 裸跑：20 分钟，核心功能不能用
+  - 多 Agent Harness：6 小时，完全可用
+  - 规划 Agent + 生成 Agent + 验收 Agent
+  - 唯一变量：是否添加 Harness
+- 结论
+  - 再好的模型复杂任务裸跑依然失败
+  - 不是过渡期权宜之计
+  - 长期基础设施 = 模型的操作系统
+
+## 🎯 为什么人人都要学
+- 驾驭工程 = 构建 Harness 的能力
+- AI PC 趋势（2026-12 推出）
+  - 模型不再稀缺
+  - 稀缺的是高效利用模型的人
+  - 人手一台法拉利：你能开多快？
+- 反直觉：差距变大而非变小
+  - 一次性任务：差距确实变小
+  - 重复性工作：Harness 收益每次累加，差距拉大
+- 👤 一人团队 OPT
+  - 搭 Harness，Agent 执行，人检查调整
+  - 某团队 90 天：8 人 → 3 人
+  - 3 个驾驭 AI 的工程师 = 过去 6 个
+  - Meta 重组：员工:管理者 50:1（旧标准 8:1）
+- 程序员深意
+  - App 消失后
+  - 为 Agent 造工具/Harness
+  - 可能是为数不多留给程序员的工作
+
+## 📖 如何学习
+- 不是：提示词技巧 / 编程能力
+- 是：思维模式 + 工作习惯
+- 产出不满意时，停一秒三问
+  - 前馈不够？（没提前说清楚）
+  - 反馈不够？（没检查对）
+  - 状态丢了？（前轮结果没记住）
+- 动手改的：对应环节的 Harness，不是 Prompt
+- 非程序员隐形门槛
+  - 程序员习惯是基础：目录结构/版本控制/写测试
+  - 越早从「碰运气」切换到「有方法」
+
+## 🗂 课程四部分
+- ① 基础框架与实践
+  - 双层操控循环 + 四个子系统
+  - 背单词 Harness
+  - 对话沉淀为文件/规则/技能
+- ② 坏味道与重构手法
+  - 13 类问题逐一拆解
+  - 需求模糊/假装完成/指令腐化
+  - 上下文倾倒/状态污染/环境缺失
+- ③ 常用模式
+  - Skills / 示例锚定 / 内部质量
+  - 自我改进 / 控制循环 / 多 Agent 编排
+  - 外部 Harness vs 内部 Harness
+- ④ 综合实战
+  - 知识工程构建
+  - 遗留系统开发
+  - Harness 持续演化产生复利
+
+## 💡 总结
+- 模型是马，Harness 是马具
+- 驾驭 ≠ 让马跑更快，而是指哪去哪
+- 把意图、知识、检查标准、工作状态
+- 组织成一套可重复运行的系统
+- 这是与 Agent 长期协作最重要的能力
+</script>
+</div>
+</body>
+</html>
